@@ -26,4 +26,25 @@ client.once(Events.ClientReady, async () => {
     console.log(`bot is active as ${client.user.tag}`);
 });
 
+/*
+    this reads / responds to messages:
+
+    client.on <- contantly checks stuff
+	messageCreate <- any message sent, regardless of who messaged and where
+	message <- the actual body of the message
+*/
+client.on("messageCreate", (message) => {
+    // if the message was sent by the bot, it won't do anything
+	// (it basically acts like a while(true) statement otherwise)
+	if (message.author.bot) {
+		return;
+	}
+    //on the message "ping" being sent in the server...
+    else if(message.content === "ping"){
+        //responds with pong
+        message.reply("Pong");
+    }
+})
+
+
 client.login(env.parsed.BOT_KEY);
