@@ -24,3 +24,16 @@
     </tbody>
     
 </table>
+
+<br />
+<hr />
+<h2 align="center">.env contents</h2>
+<p><b>BOT_KEY</b> <- this is the token for the discord bot, found in the developer portal</p>
+<p><b>CLIENT_ID</b> <- this is the application ID for the bot, also found in the developer portal</p>
+<p><b>GUILD_ID</b> <- this is the server ID that the bot is used in</p>
+<p><b>TRACK_ROUTES</b> <- this is the directory on the PC that houses the native music, it can hold up to 25 tracks and the names are automatically configured in the slash command</p><br />
+
+<i><p>-- optionals --</p></i>
+<p><b>REACTION_BONK</b>  <- tenor gif or other online image, this happens when someone @s the admin account </p>
+<p><b>REACTION_SPEACH</b>  <- also a tenor gif or online image, this happens when a keyword is sent, or if a user messages </p>
+<p><b>SPEACH_MEMBER_ID</b>  <- this is what the reaction image checks for to see what user to reply to </p>
