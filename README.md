@@ -31,7 +31,8 @@
 <p><b>BOT_KEY</b> <- this is the token for the discord bot, found in the developer portal</p>
 <p><b>CLIENT_ID</b> <- this is the application ID for the bot, also found in the developer portal</p>
 <p><b>GUILD_ID</b> <- this is the server ID that the bot is used in</p>
-<p><b>TRACK_ROUTES</b> <- this is the directory on the PC that houses the native music, it can hold up to 25 tracks and the names are automatically configured in the slash command</p><br />
+<p><b>TRACK_ROUTES</b> <- this is the directory on the PC that houses the native music, it can hold up to 25 tracks and the names are automatically configured in the slash command</p>
+<p><b>ADMIN_ID</b> <- this is the userID of the admin account, it could be optional but I am leaving it in there for reactions when @ messaged</p><br />
 
 <i><p>-- optionals --</p></i>
 <p><b>REACTION_BONK</b>  <- tenor gif or other online image, this happens when someone @s the admin account </p>
