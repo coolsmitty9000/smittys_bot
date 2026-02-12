@@ -1,16 +1,22 @@
 //discord import
 import { Client, GatewayIntentBits, Events, SlashCommandBuilder, ChannelType, Routes, VoiceChannel } from "discord.js";
-//run .bat files from native directory
-import { execSync } from "child_process";
-//file saving
-import { readFileSync, writeFileSync, existsSync } from "fs";
+//file reading
+import { readdir } from "fs/promises";
+import path from "path";
 //registering slash commands
 import { REST } from "@discordjs/rest";
 
+//youtube streaming 
+import { execFile } from "child_process";
+import { promisify } from "util";
+const execFileAsync = promisify(execFile);
+
+
 //dotenv for discord bot token
 import { configDotenv } from "dotenv";
-import { getVoiceConnection, joinVoiceChannel, createAudioPlayer, NoSubscriberBehavior, createAudioResource, AudioPlayerStatus, entersState, VoiceConnectionStatus } from "@discordjs/voice";
+import { getVoiceConnection, joinVoiceChannel, createAudioPlayer, NoSubscriberBehavior, createAudioResource, AudioPlayerStatus, entersState, VoiceConnectionStatus, StreamType } from "@discordjs/voice";
 const env = configDotenv(".env");
+
 
 //creates discord bot, named client in code
 const client = new Client({
@@ -51,6 +57,8 @@ client.once(Events.ClientReady, async () => {
 	message <- the actual body of the message
 */
 client.on("messageCreate", (message) => {
+    //console.log("MSG: ", message.content);
+
     // if the message was sent by the bot, it won't do anything
 	// (it basically acts like a while(true) statement otherwise)
 	if (message.author.bot) {
@@ -60,6 +68,12 @@ client.on("messageCreate", (message) => {
     else if(message.content === "ping"){
         //responds with pong
         message.reply("Pong");
+    }
+    else if(message.content.toLowerCase().includes("chicken") || message.author.id === env.parsed.SPEACH_MEMBER_IDN){
+        message.reply(env.parsed.REACTION_SPEACH);
+    }
+    else if(message.content.includes(`@${env.parsed.ADMIN_ID}`)){
+        message.reply(env.parsed.REACTION_BONK);
     }
 });
 
@@ -136,42 +150,87 @@ client.on("interactionCreate", async (interaction) => {
             }
         }
         //track playback
-        else if(interaction.commandName === "play1"){
-            play({tracknum: 1, interaction: interaction});
+        else if(interaction.commandName === "play"){
+            //console.log(interaction.options.getString("track"));
+            play({trackName: interaction.options.getString("track"), interaction: interaction});
         }
-        else if(interaction.commandName === "play2"){
-            play({tracknum: 2, interaction: interaction});
-        }else if(interaction.commandName === "play3"){
-            play({tracknum: 3, interaction: interaction});
+        //yt playback
+        else if(interaction.commandName === "play_yt"){
+            //make sure the bot is in the call (admin ID because this is using cookies for my account, so I am the only one to use it)
+            if(getVoiceConnection(interaction.guildId) !== undefined && interaction.user.id === env.parsed.ADMIN_ID){
+                //url the user gave
+                const userURL = interaction.options.getString("url");
+                //console.log(userURL);
+                try{
+                    interaction.reply({content: `${client.user.displayName} is now playing ${userURL}`, ephemeral: true});
+
+                    //terminal command to get youtube stream using cookies
+                    //cookies are netscape format and are in a "cookies.txt" file in the bot directory (not visible)
+                    const {stdout} = await execFileAsync("yt-dlp", [
+                        "--cookies",
+                        "cookies.txt",
+                        "-f",
+                        "bestaudio",
+                        "-g",
+                        // calls the provided url with the cookies specified
+                        userURL,
+                    ]);
+
+                    //trims out the un-needed parts to get stuff the audio resource can use
+                    const streamURL = stdout.trim();
+                    //creates the audio resource so it can be played
+                    const stream = createAudioResource(streamURL, {inputType: StreamType.Arbitrary});
+
+                    //play it through the bot
+                    player.play(stream);
+                    //inform the user it's running
+                    
+                }
+                catch(err){
+                    //any form of error will land it here
+                    console.error(err);
+                    interaction.reply({content: "bot has errored out", ephemeral: true});
+                }
+            }
         }
     }
 });
+
+//error logging
+player.on("error", error => {
+    console.error(error);
+})
 
 //this is for looping playback
 player.on(AudioPlayerStatus.Idle, () => {
     //null signifies there is no track playing or it has been stopped
     if(currTrack !== null){
-        player.play(createAudioResource(env.parsed[currTrack]));
+        player.play(createAudioResource(currTrack));
     }
 })
 
 //plays music through voice, it takes in a track number and the interaction data to reply to
-async function play ({tracknum, interaction}) {
+async function play ({trackName, interaction}) {
     //this checks if it's actually in a VC
     if(getVoiceConnection(interaction.guildId) !== undefined){
 
         //this replies to the user who passed the command
         interaction.reply({
-            content: `${client.user.displayName} is playing tack ${tracknum}`,
+            content: `${client.user.displayName} is playing tack ${trackName.split(".")[0]}`,
             ephemeral: true,
         });
-        //the tracks follow the format of -> TRACK_*number*_ROUTE
-        const trackSTR = `TRACK_${tracknum}_ROUTE`;
-        //this starts playing the audio
-        player.play(createAudioResource(env.parsed[trackSTR]));
+        //console.log(path.join(env.parsed.TRACK_ROUTES, `/${trackName}`));
+
+        //this starts playing the audio (using the directory path)
+        const audio = createAudioResource(path.join(env.parsed.TRACK_ROUTES, `/${trackName}`), {inlineVolume: true, inputType: StreamType.Opus});
+        // inline volume lets me change the volume in the same statement
+        // 0.50 volume is 50% normal volume
+        audio.volume.setVolume(0.35);
+
+        player.play(audio);
 
         //this allows the track to loop back on itself when it ends
-        currTrack = trackSTR;
+        currTrack = path.join(env.parsed.TRACK_ROUTES, `/${trackName}`);
     }   
     else{
         //otherwise inform the user that the bot is not inside of a voice chat
@@ -184,6 +243,13 @@ async function play ({tracknum, interaction}) {
 
 async function main () {
     try {
+        const files = readdir(env.parsed.TRACK_ROUTES);
+        const tracks = (await files).map(file => ({
+            name: file.split(".")[0],
+            value: file
+        }));
+        //console.log(tracks);
+
         //JSON commands
         const commands = [
             // -- vc section --
@@ -207,16 +273,25 @@ async function main () {
                 .setDescription("stops the current playback")
                 .toJSON(),
             new SlashCommandBuilder()
-                .setName("play1")
-                .setDescription("plays track 1")
+                .setName("play")
+                .setDescription("select a music track")
+                .addStringOption(option => 
+                    option
+                        .setName("track")
+                        .setDescription("select the track")
+                        .setRequired(true)
+                        .addChoices(...tracks)
+                )
                 .toJSON(),
             new SlashCommandBuilder()
-                .setName("play2")
-                .setDescription("plays track 2")
-                .toJSON(),
-            new SlashCommandBuilder()
-                .setName("play3")
-                .setDescription("plays track 3")
+                .setName("play_yt")
+                .setDescription("plays a youtube video *restricted*")
+                .addStringOption(option => 
+                    option
+                        .setName("url")
+                        .setDescription("-- youtube URL --")
+                        .setRequired(true)
+                )
                 .toJSON(),
         ];
 
