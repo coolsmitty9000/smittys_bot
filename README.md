@@ -7,5 +7,20 @@
     <thead><p>As of right now, the bot: </p></thead>
     <tbody>
         <tr> - Responds to specific messages that anyone says</tr>
+        <tr> - Joins voice calls </tr>
+        <tr> - Plays audio through the discord bot in said calls (I currently only have 3 tracks set up)</tr>
     </tbody>
+</table>
+
+<br />
+
+<table>
+    <thead>
+        <h3>What I hope to add: </h3>
+    </thead>
+    <tbody>
+        <tr> - Youtube playback </tr> <br />
+        <tr> - message / game statistics (very up in the air) </tr>
+    </tbody>
+    
 </table>
