@@ -50,6 +50,13 @@ client.once(Events.ClientReady, async () => {
 });
 
 /*
+    optional .env variables
+*/
+const speachMemberId = env.parsed.SPEACH_MEMBER_ID || undefined;
+const reactionSpeach = env.parsed.REACTION_SPEACH || undefined;
+const reactionBonk = env.parsed.REACTION_BONK || undefined;
+
+/*
     this reads / responds to messages:
 
     client.on <- contantly checks stuff
@@ -69,11 +76,20 @@ client.on("messageCreate", (message) => {
         //responds with pong
         message.reply("Pong");
     }
-    else if(message.content.toLowerCase().includes("chicken") || message.author.id === env.parsed.SPEACH_MEMBER_IDN){
-        message.reply(env.parsed.REACTION_SPEACH);
+    else if(message.content.toLowerCase().includes("chicken") || message.author.id === speachMemberId){
+        if(reactionSpeach !== undefined){
+            message.reply(reactionSpeach);
+        }
+        
     }
     else if(message.content.includes(`@${env.parsed.ADMIN_ID}`)){
-        message.reply(env.parsed.REACTION_BONK);
+        if(reactionBonk !== undefined){
+            message.reply(reactionBonk);
+        }
+        else{
+            message.reply("(-_-)");
+        }
+        
     }
 });
 
