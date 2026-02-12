@@ -31,10 +31,9 @@ const rest = new REST({version: '10'}).setToken(env.parsed.BOT_KEY);
 const player = createAudioPlayer({behaviors: {
     noSubscriber: NoSubscriberBehavior.Stop,
 }});
-//audio files
-const track1 = createAudioResource(env.parsed.TRACK_1_ROUTE);
-const track2 = createAudioResource(env.parsed.TRACK_2_ROUTE);
-const track3 = createAudioResource(env.parsed.TRACK_3_ROUTE);
+
+//for looping tracks
+var currTrack = null;
 
 /*
   this enables the bot, and will give a console output that tells you
@@ -66,82 +65,128 @@ client.on("messageCreate", (message) => {
 
 client.on("interactionCreate", async (interaction) => {
     if(interaction.isChatInputCommand()){
-        //console.log("is interaction");
+        //this allows the bot to join a VC
         if(interaction.commandName === "join_vc"){
-            //console.log("joining VC");
+            //this gets the channel that the user selected through the command
             const vChannel = interaction.options.getChannel("channel");
+            //this establishes the connection to the channel
             const vConnect = joinVoiceChannel({
                 channelId: vChannel.id,
                 guildId: vChannel.guildId,
                 adapterCreator: interaction.guild.voiceAdapterCreator,
+                //unmutes the bot
                 selfDeaf: false,
                 selfMute: false
             });
+            //when the bot has fully connected to the VC...
             await entersState(vConnect, VoiceConnectionStatus.Ready, 30_000);
+            //subscribe it (link it to) the audio player
             vConnect.subscribe(player);
             
-            
-            interaction.reply(client.user.displayName + " has joined " + vChannel.name);
+            //inform the user the bot is in the voice channel
+            interaction.reply({
+                    content: client.user.displayName + " has joined " + vChannel.name,
+                    ephemeral: true,
+                });
             //console.log(getVoiceConnection());
         }
         else if(interaction.commandName === "leave_vc"){
             //console.log("LEAVE VC", getVoiceConnection(interaction.guildId));
             if(getVoiceConnection(interaction.guildId) !== undefined){
                 //console.log("leaving vc");
-                interaction.reply(client.user.displayName + " has left the VC");
+                interaction.reply({
+                    content: client.user.displayName + " has left the VC",
+                    ephemeral: true,
+                });
 
                 //stop audio
                 player.stop();
+                currTrack = null;
+
+                //removes the bot from the voice channel it's currently in
                 getVoiceConnection(interaction.guildId).destroy();
-                
             }
             else{
-                //console.log("no vc to leave");
-                interaction.reply(client.user.displayName + " is not in a VC");
+                //if there is not VC the bot is currently in it will inform the user
+                interaction.reply({ 
+                    content: client.user.displayName + " is not in a VC",
+                    ephemeral: true,
+                });
             }
         }
+        //this stops the music that is currently playing
         else if(interaction.commandName === "stop"){
+            //if it is inside of a voice channel
             if(getVoiceConnection(interaction.guildId) !== undefined){
+                //run the stopper on the audio player (won't hurt if its ran with nothing playing)
                 player.stop();
-                interaction.reply(client.user.displayName + " has stopped playback");
+                currTrack = null;
+
+                //tell the user it's stopped playing
+                interaction.reply({ 
+                    content: client.user.displayName + " has stopped playback",
+                    ephemeral: true,
+                });
             }
             else{
-                interaction.reply(client.user.displayName + " is not inside of vc");
+                interaction.reply({
+                    content: client.user.displayName + " is not inside of vc",
+                    ephemeral: true,
+                });
             }
         }
+        //track playback
         else if(interaction.commandName === "play1"){
-            if(getVoiceConnection(interaction.guildId) !== undefined){
-                interaction.reply(client.user.displayName + " is playing tack 1");
-                player.play(track1);
-            }
-            else{
-                interaction.reply(client.user.displayName + " is not inside of vc");
-            }
+            play({tracknum: 1, interaction: interaction});
         }
         else if(interaction.commandName === "play2"){
-            if(getVoiceConnection(interaction.guildId) !== undefined){
-                interaction.reply(client.user.displayName + " is playing tack 2");
-                player.play(track2);
-            }
-            else{
-                interaction.reply(client.user.displayName + " is not inside of vc");
-            }
+            play({tracknum: 2, interaction: interaction});
         }else if(interaction.commandName === "play3"){
-            if(getVoiceConnection(interaction.guildId) !== undefined){
-                interaction.reply(client.user.displayName + " is playing tack 3");
-                player.play(track3);
-            }
-            else{
-                interaction.reply(client.user.displayName + " is not inside of vc");
-            }
+            play({tracknum: 3, interaction: interaction});
         }
     }
+});
+
+//this is for looping playback
+player.on(AudioPlayerStatus.Idle, () => {
+    //null signifies there is no track playing or it has been stopped
+    if(currTrack !== null){
+        player.play(createAudioResource(env.parsed[currTrack]));
+    }
 })
+
+//plays music through voice, it takes in a track number and the interaction data to reply to
+async function play ({tracknum, interaction}) {
+    //this checks if it's actually in a VC
+    if(getVoiceConnection(interaction.guildId) !== undefined){
+
+        //this replies to the user who passed the command
+        interaction.reply({
+            content: `${client.user.displayName} is playing tack ${tracknum}`,
+            ephemeral: true,
+        });
+        //the tracks follow the format of -> TRACK_*number*_ROUTE
+        const trackSTR = `TRACK_${tracknum}_ROUTE`;
+        //this starts playing the audio
+        player.play(createAudioResource(env.parsed[trackSTR]));
+
+        //this allows the track to loop back on itself when it ends
+        currTrack = trackSTR;
+    }   
+    else{
+        //otherwise inform the user that the bot is not inside of a voice chat
+        interaction.reply({
+            content: client.user.displayName + " is not inside of vc",
+            ephemeral: true,
+        });
+    }    
+}
 
 async function main () {
     try {
         //JSON commands
         const commands = [
+            // -- vc section --
             new SlashCommandBuilder()
                 .setName('join_vc')
                 .setDescription('Joins the specified voice channel')
@@ -156,6 +201,7 @@ async function main () {
                 .setName("leave_vc")
                 .setDescription("leaves the current voice channel")
                 .toJSON(),
+            // -- music section --
             new SlashCommandBuilder()
                 .setName("stop")
                 .setDescription("stops the current playback")
