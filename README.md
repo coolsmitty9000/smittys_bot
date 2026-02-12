@@ -4,15 +4,14 @@
 <h3 align="center">I will be using this for a variety of reasons that I will update this README file for...</h3>
 <br/>
 <table>
-    <thead><p>As of right now, the bot: </p></thead>
+    <thead><h3>As of right now, the bot: </h3></thead>
     <tbody>
-        <tr> - Responds to specific messages that anyone says</tr>
-        <tr> - Joins voice calls </tr>
-        <tr> - Plays audio through the discord bot in said calls (I currently only have 3 tracks set up)</tr>
+        <tr> - Responds to specific messages that anyone says</tr> <br />
+        <tr> - Joins voice calls </tr><br />
+        <tr> - Plays audio through the discord bot in said calls (I currently only have 3 tracks set up)</tr><br />
     </tbody>
 </table>
 
-<br />
 
 <table>
     <thead>
