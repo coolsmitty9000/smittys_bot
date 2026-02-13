@@ -195,7 +195,8 @@ client.on("interactionCreate", async (interaction) => {
                     //trims out the un-needed parts to get stuff the audio resource can use
                     const streamURL = stdout.trim();
                     //creates the audio resource so it can be played
-                    const stream = createAudioResource(streamURL, {inputType: StreamType.Arbitrary});
+                    const stream = createAudioResource(streamURL, {inputType: StreamType.Arbitrary, inlineVolume: true});
+                    stream.volume.setVolume(0.03);
 
                     //play it through the bot
                     player.play(stream);
@@ -207,6 +208,12 @@ client.on("interactionCreate", async (interaction) => {
                     console.error(err);
                     interaction.reply({content: "bot has errored out", ephemeral: true});
                 }
+            }
+            else if(getVoiceConnection(interaction.guildId) === undefined){
+                interaction.reply({content: `${client.user.displayName} is not in a call`, ephemeral: true});
+            }
+            else if(interaction.user.id !== env.parsed.ADMIN_ID){
+                interaction.reply({content: `you do not have permissions for this command`, ephemeral: true});
             }
         }
     }
@@ -241,7 +248,7 @@ async function play ({trackName, interaction}) {
         const audio = createAudioResource(path.join(env.parsed.TRACK_ROUTES, `/${trackName}`), {inlineVolume: true, inputType: StreamType.Opus});
         // inline volume lets me change the volume in the same statement
         // 0.50 volume is 50% normal volume
-        audio.volume.setVolume(0.35);
+        audio.volume.setVolume(0.05);
 
         player.play(audio);
 
