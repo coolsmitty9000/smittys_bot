@@ -37,6 +37,6 @@
 <i><p>-- optionals --</p></i>
 <p><b>REACTION_ADMIN</b>  <- tenor gif or other online image, this happens when someone @s the admin account </p>
 <p><b>REACTION_1</b>  <- a tenor gif or online image, this sends if a user @ messages the specified person, but I also have it going off a keyword</p>
-<p><b>MEMBER_ID1</b>  <- this is what REACTION_1 checks for to see what user to reply to </p>
+<p><b>MEMBER_ID1</b>  <- this is what REACTION_1 checks for to see what user was @ messaged</p>
 <p><b>REACTION_2</b>  <- a tenor gif or online image, this only happens when the specific user is @ messaged </p>
-<p><b>MEMBER_ID2</b>  <- this is what REACTION_2 checks for to see what user to reply to </p>
+<p><b>MEMBER_ID2</b>  <- this is what REACTION_2 checks for to see what user was @ messaged </p>
