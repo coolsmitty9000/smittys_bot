@@ -20,7 +20,9 @@
         <h3>What I hope to add: </h3>
     </thead>
     <tbody>
-        <tr> - message / game statistics (very up in the air) </tr>
+        <tr> - message / game statistics (very up in the air) </tr><br />
+        <tr> - AI API intigration for answering questions (undecided) </tr><br />
+        <tr> - ability to have more than 25 music tracks at a time (limitations on how I did it) </tr><br />
     </tbody>
     
 </table>
