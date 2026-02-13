@@ -6,7 +6,7 @@
 <table>
     <thead><h3>As of right now, the bot: </h3></thead>
     <tbody>
-        <tr> - Responds to specific messages that anyone says</tr> <br />
+        <tr> - Responds to specific messages that is sent in the server</tr> <br />
         <tr> - Reaction images if a specific user messages, or @s the admin user specified in the .env</tr><br />
         <tr> - Joins voice calls </tr><br />
         <tr> - Plays audio through the discord bot in voice calls. This scans a directory on my computer for up to 25 audio files and lists them out as options inside the slash command that you can choose from <i>(directory is set inside of the .env file)</i></tr><br />
