@@ -52,9 +52,11 @@ client.once(Events.ClientReady, async () => {
 /*
     optional .env variables
 */
-const speachMemberId = env.parsed.SPEACH_MEMBER_ID || undefined;
-const reactionSpeach = env.parsed.REACTION_SPEACH || undefined;
-const reactionBonk = env.parsed.REACTION_BONK || undefined;
+const MemberId1 = env.parsed.MEMBER_ID1 || undefined;
+const reaction1 = env.parsed.REACTION_1 || undefined;
+const reactionAdmin = env.parsed.REACTION_ADMIN || undefined;
+const reaction2 = env.parsed.REACTION_2 || undefined;
+const MemberId2 = env.parsed.MEMBER_ID2 || undefined;
 
 /*
     this reads / responds to messages:
@@ -63,7 +65,7 @@ const reactionBonk = env.parsed.REACTION_BONK || undefined;
 	messageCreate <- any message sent, regardless of who messaged and where
 	message <- the actual body of the message
 */
-client.on("messageCreate", (message) => {
+client.on("messageCreate", async (message) => {
     //console.log("MSG: ", message.content);
 
     // if the message was sent by the bot, it won't do anything
@@ -76,15 +78,25 @@ client.on("messageCreate", (message) => {
         //responds with pong
         message.reply("Pong");
     }
-    else if(message.content.toLowerCase().includes("chicken") || message.author.id === speachMemberId){
-        if(reactionSpeach !== undefined){
-            message.reply(reactionSpeach);
+    else if(message.content.toLowerCase().includes("chicken") || message.author.id === MemberId1){
+        if(reaction1 !== undefined){
+            message.reply(reaction1);
+        }
+        
+    }
+    else if(message.content.includes(MemberId2)){
+        if(reaction2 !== undefined){
+            const msgID = await message.reply(reaction2);
+            setTimeout(async () => {
+                const msg = await message.channel.messages.fetch(msgID);
+                msg.delete();
+            }, 4500);
         }
         
     }
     else if(message.content.includes(`@${env.parsed.ADMIN_ID}`)){
-        if(reactionBonk !== undefined){
-            message.reply(reactionBonk);
+        if(reactionAdmin !== undefined){
+            message.reply(reactionAdmin);
         }
         else{
             message.reply("(-_-)");
