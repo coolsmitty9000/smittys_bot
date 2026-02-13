@@ -1,3 +1,30 @@
+/*
+██████╗ ███████╗██╗   ██╗███████╗██╗      ██████╗ ██████╗ ███████╗██████╗     ██████╗ ██╗   ██╗                               
+██╔══██╗██╔════╝██║   ██║██╔════╝██║     ██╔═══██╗██╔══██╗██╔════╝██╔══██╗    ██╔══██╗╚██╗ ██╔╝██╗                            
+██║  ██║█████╗  ██║   ██║█████╗  ██║     ██║   ██║██████╔╝█████╗  ██║  ██║    ██████╔╝ ╚████╔╝ ╚═╝                            
+██║  ██║██╔══╝  ╚██╗ ██╔╝██╔══╝  ██║     ██║   ██║██╔═══╝ ██╔══╝  ██║  ██║    ██╔══██╗  ╚██╔╝  ██╗                            
+██████╔╝███████╗ ╚████╔╝ ███████╗███████╗╚██████╔╝██║     ███████╗██████╔╝    ██████╔╝   ██║   ╚═╝                            
+╚═════╝ ╚══════╝  ╚═══╝  ╚══════╝╚══════╝ ╚═════╝ ╚═╝     ╚══════╝╚═════╝     ╚═════╝    ╚═╝                                  
+                                                                                                                              
+     ██████╗ ██████╗  ██████╗ ██╗     ███████╗███╗   ███╗██╗████████╗████████╗██╗   ██╗ █████╗  ██████╗  ██████╗  ██████╗ 
+    ██╔════╝██╔═══██╗██╔═══██╗██║     ██╔════╝████╗ ████║██║╚══██╔══╝╚══██╔══╝╚██╗ ██╔╝██╔══██╗██╔═████╗██╔═████╗██╔═████╗
+    ██║     ██║   ██║██║   ██║██║     ███████╗██╔████╔██║██║   ██║      ██║    ╚████╔╝ ╚██████║██║██╔██║██║██╔██║██║██╔██║
+    ██║     ██║   ██║██║   ██║██║     ╚════██║██║╚██╔╝██║██║   ██║      ██║     ╚██╔╝   ╚═══██║████╔╝██║████╔╝██║████╔╝██║
+    ╚██████╗╚██████╔╝╚██████╔╝███████╗███████║██║ ╚═╝ ██║██║   ██║      ██║      ██║    █████╔╝╚██████╔╝╚██████╔╝╚██████╔╝
+        ╚═════╝ ╚═════╝  ╚═════╝ ╚══════╝╚══════╝╚═╝     ╚═╝╚═╝   ╚═╝      ╚═╝      ╚═╝    ╚════╝  ╚═════╝  ╚═════╝  ╚═════╝
+                                                                                                                                                                                                             
+█████╗█████╗█████╗█████╗█████╗█████╗█████╗█████╗█████╗█████╗█████╗█████╗█████╗█████╗█████╗█████╗█████╗█████╗█████╗█████╗█████╗
+╚════╝╚════╝╚════╝╚════╝╚════╝╚════╝╚════╝╚════╝╚════╝╚════╝╚════╝╚════╝╚════╝╚════╝╚════╝╚════╝╚════╝╚════╝╚════╝╚════╝╚════╝
+
+
+
+          ██╗███╗   ███╗██████╗  ██████╗ ██████╗ ████████╗███████╗          
+          ██║████╗ ████║██╔══██╗██╔═══██╗██╔══██╗╚══██╔══╝██╔════╝          
+█████╗    ██║██╔████╔██║██████╔╝██║   ██║██████╔╝   ██║   ███████╗    █████╗
+╚════╝    ██║██║╚██╔╝██║██╔═══╝ ██║   ██║██╔══██╗   ██║   ╚════██║    ╚════╝
+          ██║██║ ╚═╝ ██║██║     ╚██████╔╝██║  ██║   ██║   ███████║          
+          ╚═╝╚═╝     ╚═╝╚═╝      ╚═════╝ ╚═╝  ╚═╝   ╚═╝   ╚══════╝          
+*/
 //discord import
 import { Client, GatewayIntentBits, Events, SlashCommandBuilder, ChannelType, Routes, VoiceChannel } from "discord.js";
 //file reading
@@ -17,7 +44,14 @@ import { configDotenv } from "dotenv";
 import { getVoiceConnection, joinVoiceChannel, createAudioPlayer, NoSubscriberBehavior, createAudioResource, AudioPlayerStatus, entersState, VoiceConnectionStatus, StreamType } from "@discordjs/voice";
 const env = configDotenv(".env");
 
-
+/*
+          ██╗███╗   ██╗████████╗███████╗███╗   ██╗████████╗███████╗          
+          ██║████╗  ██║╚══██╔══╝██╔════╝████╗  ██║╚══██╔══╝██╔════╝          
+█████╗    ██║██╔██╗ ██║   ██║   █████╗  ██╔██╗ ██║   ██║   ███████╗    █████╗
+╚════╝    ██║██║╚██╗██║   ██║   ██╔══╝  ██║╚██╗██║   ██║   ╚════██║    ╚════╝
+          ██║██║ ╚████║   ██║   ███████╗██║ ╚████║   ██║   ███████║          
+          ╚═╝╚═╝  ╚═══╝   ╚═╝   ╚══════╝╚═╝  ╚═══╝   ╚═╝   ╚══════╝          
+*/
 //creates discord bot, named client in code
 const client = new Client({
     intents: [
@@ -58,7 +92,16 @@ const reactionAdmin = env.parsed.REACTION_ADMIN || undefined;
 const reaction2 = env.parsed.REACTION_2 || undefined;
 const MemberId2 = env.parsed.MEMBER_ID2 || undefined;
 
+
 /*
+          ███████╗███████╗███╗   ██╗████████╗    ███╗   ███╗███████╗███████╗███████╗ █████╗  ██████╗ ███████╗███████╗          
+          ██╔════╝██╔════╝████╗  ██║╚══██╔══╝    ████╗ ████║██╔════╝██╔════╝██╔════╝██╔══██╗██╔════╝ ██╔════╝██╔════╝          
+█████╗    ███████╗█████╗  ██╔██╗ ██║   ██║       ██╔████╔██║█████╗  ███████╗███████╗███████║██║  ███╗█████╗  ███████╗    █████╗
+╚════╝    ╚════██║██╔══╝  ██║╚██╗██║   ██║       ██║╚██╔╝██║██╔══╝  ╚════██║╚════██║██╔══██║██║   ██║██╔══╝  ╚════██║    ╚════╝
+          ███████║███████╗██║ ╚████║   ██║       ██║ ╚═╝ ██║███████╗███████║███████║██║  ██║╚██████╔╝███████╗███████║          
+          ╚══════╝╚══════╝╚═╝  ╚═══╝   ╚═╝       ╚═╝     ╚═╝╚══════╝╚══════╝╚══════╝╚═╝  ╚═╝ ╚═════╝ ╚══════╝╚══════╝          
+                                                                                                                               
+          
     this reads / responds to messages:
 
     client.on <- contantly checks stuff
@@ -78,26 +121,38 @@ client.on("messageCreate", async (message) => {
         //responds with pong
         message.reply("Pong");
     }
-    else if(message.content.toLowerCase().includes("chicken") || message.author.id === MemberId1){
+    //if the keyword is sent (this is a reaction with a chicken in this case) or if the specified user is @ messaged...
+    else if(message.content.toLowerCase().includes("chicken") || message.author.id === MemberId1 && MemberId1 !== undefined){
+        //check to make sure the reaction has something to refrence (link to something)
         if(reaction1 !== undefined){
             message.reply(reaction1);
         }
         
     }
-    else if(message.content.includes(MemberId2)){
+    //if the specified user is @ messaged...
+    else if(message.content.includes(MemberId2) && MemberId2 !== undefined){
+        //check to make sure the reaction has something to refrence (link to something)
         if(reaction2 !== undefined){
+            //store the ID inside a variable to delete later (this is the reply that is sent)
             const msgID = await message.reply(reaction2);
+            //timeout to wait for 4.5 seconds before deleting the reply
             setTimeout(async () => {
+                //get the message from the channel it was sent in using the stored message value
                 const msg = await message.channel.messages.fetch(msgID);
+                //delete the message
                 msg.delete();
             }, 4500);
         }
         
     }
+    //this checks to see if the admin user gets @ messaged
     else if(message.content.includes(`@${env.parsed.ADMIN_ID}`)){
+        //if the admin has the reaction specified (link to something)...
         if(reactionAdmin !== undefined){
+            //send it
             message.reply(reactionAdmin);
         }
+        //other wise just send this
         else{
             message.reply("(-_-)");
         }
@@ -105,6 +160,15 @@ client.on("messageCreate", async (message) => {
     }
 });
 
+/* 
+          ███████╗██╗      █████╗ ███████╗██╗  ██╗     ██████╗ ██████╗ ███╗   ███╗███╗   ███╗ █████╗ ███╗   ██╗██████╗ ███████╗          
+          ██╔════╝██║     ██╔══██╗██╔════╝██║  ██║    ██╔════╝██╔═══██╗████╗ ████║████╗ ████║██╔══██╗████╗  ██║██╔══██╗██╔════╝          
+█████╗    ███████╗██║     ███████║███████╗███████║    ██║     ██║   ██║██╔████╔██║██╔████╔██║███████║██╔██╗ ██║██║  ██║███████╗    █████╗
+╚════╝    ╚════██║██║     ██╔══██║╚════██║██╔══██║    ██║     ██║   ██║██║╚██╔╝██║██║╚██╔╝██║██╔══██║██║╚██╗██║██║  ██║╚════██║    ╚════╝
+          ███████║███████╗██║  ██║███████║██║  ██║    ╚██████╗╚██████╔╝██║ ╚═╝ ██║██║ ╚═╝ ██║██║  ██║██║ ╚████║██████╔╝███████║          
+          ╚══════╝╚══════╝╚═╝  ╚═╝╚══════╝╚═╝  ╚═╝     ╚═════╝ ╚═════╝ ╚═╝     ╚═╝╚═╝     ╚═╝╚═╝  ╚═╝╚═╝  ╚═══╝╚═════╝ ╚══════╝          
+                                                                                                                                        
+*/
 client.on("interactionCreate", async (interaction) => {
     if(interaction.isChatInputCommand()){
         //this allows the bot to join a VC
@@ -278,12 +342,33 @@ async function play ({trackName, interaction}) {
 
 async function main () {
     try {
+/*
+          ███████╗██╗██╗     ███████╗███████╗          
+          ██╔════╝██║██║     ██╔════╝██╔════╝          
+█████╗    █████╗  ██║██║     █████╗  ███████╗    █████╗
+╚════╝    ██╔══╝  ██║██║     ██╔══╝  ╚════██║    ╚════╝
+          ██║     ██║███████╗███████╗███████║          
+          ╚═╝     ╚═╝╚══════╝╚══════╝╚══════╝          
+                                                       
+*/
+
         const files = readdir(env.parsed.TRACK_ROUTES);
         const tracks = (await files).map(file => ({
             name: file.split(".")[0],
             value: file
         }));
         //console.log(tracks);
+
+
+/* 
+           ██████╗ ██████╗ ███╗   ███╗███╗   ███╗ █████╗ ███╗   ██╗██████╗ ███████╗          
+          ██╔════╝██╔═══██╗████╗ ████║████╗ ████║██╔══██╗████╗  ██║██╔══██╗██╔════╝          
+█████╗    ██║     ██║   ██║██╔████╔██║██╔████╔██║███████║██╔██╗ ██║██║  ██║███████╗    █████╗
+╚════╝    ██║     ██║   ██║██║╚██╔╝██║██║╚██╔╝██║██╔══██║██║╚██╗██║██║  ██║╚════██║    ╚════╝
+          ╚██████╗╚██████╔╝██║ ╚═╝ ██║██║ ╚═╝ ██║██║  ██║██║ ╚████║██████╔╝███████║          
+           ╚═════╝ ╚═════╝ ╚═╝     ╚═╝╚═╝     ╚═╝╚═╝  ╚═╝╚═╝  ╚═══╝╚═════╝ ╚══════╝          
+                                                                                             
+*/
 
         //JSON commands
         const commands = [
