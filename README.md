@@ -35,6 +35,8 @@
 <p><b>ADMIN_ID</b> <- this is the userID of the admin account, it could be optional but I am leaving it in there for reactions when @ messaged</p><br />
 
 <i><p>-- optionals --</p></i>
-<p><b>REACTION_BONK</b>  <- tenor gif or other online image, this happens when someone @s the admin account </p>
-<p><b>REACTION_SPEACH</b>  <- also a tenor gif or online image, this happens when a keyword is sent, or if a user messages </p>
-<p><b>SPEACH_MEMBER_ID</b>  <- this is what the reaction image checks for to see what user to reply to </p>
+<p><b>REACTION_ADMIN</b>  <- tenor gif or other online image, this happens when someone @s the admin account </p>
+<p><b>REACTION_1</b>  <- a tenor gif or online image, this sends if a user @ messages the specified person, but I also have it going off a keyword</p>
+<p><b>MEMBER_ID1</b>  <- this is what REACTION_1 checks for to see what user to reply to </p>
+<p><b>REACTION_2</b>  <- a tenor gif or online image, this only happens when the specific user is @ messaged </p>
+<p><b>MEMBER_ID2</b>  <- this is what REACTION_2 checks for to see what user to reply to </p>
